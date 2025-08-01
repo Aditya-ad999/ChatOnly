@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <h1>Login</h1>
+  <input type="email" id="email" placeholder="Email"><br><br>
+  <input type="password" id="password" placeholder="Password"><br><br>
+  <button onclick="login()">Login</button>
+
+  <script type="module">
+    // ✅ Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7LBanvFRUWjwpxGdWdlIMDeQ_KJjE1pg",
+      authDomain: "chatonly-c2025.firebaseapp.com",
+      projectId: "chatonly-c2025",
+      storageBucket: "chatonly-c2025.firebasestorage.app",
+      messagingSenderId: "361785272269",
+      appId: "1:361785272269:web:44a1d62ac868cf0c814684",
+      measurementId: "G-EN4M32FHE9"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ✅ Auto-redirect if user is already logged in
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("Already logged in as:", user.email);
+        window.location.href = "home.html";  // 🔁 Redirect to home if already logged in
+      }
+    });
+
+    // ✅ Login function
+    window.login = function () {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          alert("Login successful! Welcome " + (user.displayName || user.email));
+          window.location.href = "home.html"; // 🔁 Redirect after successful login
+        })
+        .catch((error) => {
+          alert("Login failed: " + error.message);
+        });
+    };
+  </script>
+</body>
+</html>

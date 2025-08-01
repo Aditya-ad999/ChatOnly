@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Signup</title>
+</head>
+<body>
+  <h1>Signup</h1>
+
+  <input type="text" id="name" placeholder="Your Name"><br>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button onclick="signup()">Signup</button>
+
+  <p id="message" style="color: green;"></p>
+
+  <!-- Firebase App (core SDK) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD7LBanvFRUWjwpxGdWdlIMDeQ_KJjE1pg",
+      authDomain: "chatonly-c2025.firebaseapp.com",
+      projectId: "chatonly-c2025",
+      storageBucket: "chatonly-c2025.firebasestorage.app",
+      messagingSenderId: "361785272269",
+      appId: "1:361785272269:web:44a1d62ac868cf0c814684",
+      measurementId: "G-EN4M32FHE9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ✅ Auto-redirect if already logged in
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        window.location.href = "home.html";
+      }
+    });
+
+    // Signup function
+    window.signup = function () {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name,
+          });
+          document.getElementById("message").innerText = "Signup successful!";
+          window.location.href = "home.html";
+        })
+        .catch((error) => {
+          document.getElementById("message").innerText = "Error: " + error.message;
+        });
+    };
+  </script>
+</body>
+</html>
